@@ -1,37 +1,39 @@
 var express = require('express');
 var router = express.Router();
 
-
-router.get('/', function(req, res, next) {
-    res.render('db', { title: 'HelloWorld' });
-});
-module.exports = router;
-/* GET db page.
 var pg = require('pg');
+var conString = 'postgres:praveen:password@//localhost:5432/pkdb';
+
+var config = {
+    user : 'praveen',
+    database : 'pkdb',
+    max : 10,
+    idleTimeOutMillis : 3000
+}
+var client = new pg.Client(config);
 router.get('/', function(req, res, next) {
-    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-        client.query('SELECT * FROM test_table', function (err, result) {
-                done();
-                res.render('db',{results: result.rows});
-            }
-        )
-    })
-    res.render('db', { title: 'HelloWorld' });
-});
+    client.connect(function (err) {
+        if (err)
+        {
+            console.log(err.message)
+        }
 
-module.exports = router;*/
-
-//var app = express();
-/*var pg = require('pg');
-router.get('/db', function (request, response) {
-    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-        client.query('SELECT * FROM test_table', function(err, result) {
-            done();
+        client.query("Select * from test_table",function (err, result) {
             if (err)
             { console.error(err); response.send("Error " + err); }
             else
-            { response.render('db', {results: result.rows} ); }
-        });
-    });
+
+            { console.log("Here are we")
+                console.log(result.rows);
+                res.render('pages/db', {results: result.rows}
+                 );
+            }
+        })
+    })
+
 });
-module.exports = router;*/
+module.exports = router;
+
+
+
+
